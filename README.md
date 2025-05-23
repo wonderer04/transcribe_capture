@@ -1,6 +1,8 @@
 # transcribe_capture
 cd ~/Desktop
+
 mkdir transcribe
+
 cd transcribe
 #デスクトップに作成したtranscribeフォルダにソースコードファイルを配置
 
@@ -13,4 +15,4 @@ source venv/bin/activate
 
 pip install --upgrade pip
 pip install numpy scipy sounddevice git+https://github.com/openai/whisper.git
-#必要なライブラリを下記コードでインストール
+#必要なライブラリをインストール
