@@ -1,48 +1,81 @@
-# transcribe_capture
-#主な機能はmacで再生している音声をmacのスピーカーで自分でも聞きながら文字起こしを行えるというアプリです。
+# Transcribe Capture for macOS  
+**再生中の音声をそのまま聞きながら、リアルタイムで文字起こしを行うPythonアプリ**
 
-#事前にblackholeをインストールの上、下記設定が必要です。
+---
 
-Audio MIDI設定で「複数出力装置」を作る
-Finder > アプリケーション > ユーティリティ > Audio MIDI設定 を開く。
+## ✅ 概要
 
-左下の「＋」ボタン > 「複数出力装置」を作成。
+このアプリは、macOS上で再生されている音声（例：YouTube動画）を、自分で聞きながら文字起こしできるCLIツールです。  
+仮想オーディオデバイス「BlackHole」と、OpenAIの音声認識モデル「Whisper」を使用します。
 
-使用する出力を選択（例: MacBookのスピーカー + BlackHole 2ch　blackhole_2chインストールの場合）
+---
 
-これを「主出力」に設定する（右クリックで設定可能）。
+## 🛠 必要な環境
 
-こうすることで、自分にも音が聞こえながら、BlackHoleにも音が流れます。
+- macOS（Apple Silicon M1/M2 対応）
+- Python 3.10 以上
+- [BlackHole 2ch](https://github.com/ExistentialAudio/BlackHole)（仮想オーディオドライバ）
 
-システム環境設定 ＞ サウンド ＞ 入力 を BlackHole に設定
-「入力」タブを開く
+---
 
-BlackHole 2ch　を選択
+## ⚙️ BlackHoleの設定手順
 
-これで、Macの再生音が仮想的に「マイク入力」として扱われます。
+### 1. 複数出力装置の作成（Audio MIDI設定）
 
-ターミナルから下記コード使用
+1. Finder > アプリケーション > ユーティリティ > **Audio MIDI設定** を開く  
+2. 左下の「＋」から「複数出力装置」を作成  
+3. 「MacBookのスピーカー」＋「BlackHole 2ch」をチェック  
+4. 右クリックで「主出力」に設定
 
+### 2. 入力デバイスの設定
+
+- システム設定 > サウンド > 入力  
+- 入力デバイスを **BlackHole 2ch** に変更
+
+> これにより、自分で音声を聞きながら、同時に録音・文字起こしが可能になります。
+
+---
+
+## 🐍 仮想環境の作成とライブラリのインストール
+
+```bash
 cd ~/Desktop
-
 mkdir transcribe
-
 cd transcribe
-#デスクトップに作成したtranscribeフォルダ内に移動。ソースコードファイルはこのフォルダ内に配置
 
 python3 -m venv venv
-#仮想環境を作成（仮想環境名venv)
-
 source venv/bin/activate
-#仮想環境の起動
-
 
 pip install --upgrade pip
 pip install numpy scipy sounddevice git+https://github.com/openai/whisper.git
-#必要なライブラリをインストール
+```
 
+▶️ アプリの実行
+```bash
 python capture_and_transcribe.py
+```
+上記スクリプトを実行した状態で、YouTubeなどで音声を再生すると、自動的に文字起こしが始まります。
 
-#ソースコードファイルcapture_and_transcribe.pyを実行。ブラウザなどで会話のある動画または音声ファイル再生
+---
 
-#ソースコードのあるフォルダ内にフォルダを作成、文字起こしされたテキストファイルが作成されます。
+📁 出力仕様
+
+実行フォルダ内に自動で出力フォルダが作成され、.txt 形式で文字起こしファイルが保存されます。
+
+ファイル名は実行日時ベースです（例：2025-05-21_141500.txt）
+
+---
+
+📌 注意点
+
+音声ソースは「スピーカー出力」として再生される必要があります。
+
+Whisperは初回実行時にモデルファイルをダウンロードします（数百MB程度）。
+
+---
+
+🤝 ライセンス・著作権
+
+Whisper: MIT License
+
+本スクリプトは個人の学習・研究目的で作成されたものです。
